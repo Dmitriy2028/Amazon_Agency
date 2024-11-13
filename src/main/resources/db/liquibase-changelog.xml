@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1" author="Dmytro">
+        <sql>
+            CREATE TABLE IF NOT EXISTS roles (
+            id SERIAL NOT NULL,
+            name VARCHAR(255),
+            PRIMARY KEY (id)
+            );
+
+            CREATE TABLE IF NOT EXISTS user_roles (
+            role_id INTEGER NOT NULL,
+            user_id BIGINT NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS users (
+            id BIGSERIAL NOT NULL,
+            email VARCHAR(255) UNIQUE,
+            first_name VARCHAR(255),
+            last_name VARCHAR(255),
+            password VARCHAR(255),
+            PRIMARY KEY (id)
+            );
+
+            -- Удаление существующих ограничений, если они есть
+            ALTER TABLE user_roles DROP CONSTRAINT IF EXISTS fk_user_roles_role;
+            ALTER TABLE user_roles DROP CONSTRAINT IF EXISTS fk_user_roles_user;
+
+            -- Добавление новых ограничений без проверки на их существование
+            ALTER TABLE user_roles ADD CONSTRAINT fk_user_roles_role FOREIGN KEY (role_id) REFERENCES roles;
+            ALTER TABLE user_roles ADD CONSTRAINT fk_user_roles_user FOREIGN KEY (user_id) REFERENCES users;
+        </sql>
+    </changeSet>
+
+
+    <changeSet id="2" author="Dmytro">
+        <sql>
+            INSERT INTO roles (name)
+            VALUES ('ROLE_PERSONAL');
+            INSERT INTO roles (name)
+            VALUES ('ROLE_ADMIN');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
