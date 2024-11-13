@@ -129,8 +129,3 @@ Additionally, the PostgreSQL database is initialized using Liquibase migrations,
 ### Security
 
 JWT tokens are used for securing endpoints. After registering and logging in, users receive a token which must be included in the `Authorization` header for all requests that require authentication.
-
-Example request:
-```bash
-GET /statistics/date?startDate=2024-01-01&endDate=2024-12-31
-Authorization: Bearer JWT_TOKEN
